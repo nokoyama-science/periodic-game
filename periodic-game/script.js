@@ -1,108 +1,98 @@
 const elements = [
-
-{name:"水素",symbol:"H"},
-{name:"ヘリウム",symbol:"He"},
-{name:"リチウム",symbol:"Li"},
-{name:"ベリリウム",symbol:"Be"},
-{name:"ホウ素",symbol:"B"},
-{name:"炭素",symbol:"C"},
-{name:"窒素",symbol:"N"},
-{name:"酸素",symbol:"O"},
-{name:"フッ素",symbol:"F"},
-{name:"ネオン",symbol:"Ne"},
-{name:"ナトリウム",symbol:"Na"},
-{name:"マグネシウム",symbol:"Mg"},
-{name:"アルミニウム",symbol:"Al"},
-{name:"ケイ素",symbol:"Si"},
-{name:"リン",symbol:"P"},
-{name:"硫黄",symbol:"S"},
-{name:"塩素",symbol:"Cl"},
-{name:"アルゴン",symbol:"Ar"},
-{name:"カリウム",symbol:"K"},
-{name:"カルシウム",symbol:"Ca"}
-
+    { name: "水素", symbol: "H" },
+    { name: "ヘリウム", symbol: "He" },
+    { name: "リチウム", symbol: "Li" },
+    { name: "ベリリウム", symbol: "Be" },
+    { name: "ホウ素", symbol: "B" },
+    { name: "炭素", symbol: "C" },
+    { name: "窒素", symbol: "N" },
+    { name: "酸素", symbol: "O" },
+    { name: "フッ素", symbol: "F" },
+    { name: "ネオン", symbol: "Ne" },
+    { name: "ナトリウム", symbol: "Na" },
+    { name: "マグネシウム", symbol: "Mg" },
+    { name: "アルミニウム", symbol: "Al" },
+    { name: "ケイ素", symbol: "Si" },
+    { name: "リン", symbol: "P" },
+    { name: "硫黄", symbol: "S" },
+    { name: "塩素", symbol: "Cl" },
+    { name: "アルゴン", symbol: "Ar" },
+    { name: "カリウム", symbol: "K" },
+    { name: "カルシウム", symbol: "Ca" }
 ];
 
-let score=0;
-
-let count=0;
-
+let score = 0;
+let count = 0;
 let current;
+
+const question = document.getElementById("question");
+const questionNumber = document.getElementById("questionNumber");
+const answer = document.getElementById("answer");
+const message = document.getElementById("message");
+const scoreText = document.getElementById("score");
 
 nextQuestion();
 
-document.getElementById("submitButton").onclick=check;
+document.getElementById("submitButton").onclick = check;
 
-document.getElementById("answer").addEventListener("keydown",function(e){
-
-if(e.key==="Enter"){
-
-check();
-
-}
-
+answer.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        check();
+    }
 });
 
-function nextQuestion(){
+function nextQuestion() {
 
-if(count>=20){
+    if (count >= 20) {
+        finish();
+        return;
+    }
 
-finish();
+    current = elements[Math.floor(Math.random() * elements.length)];
 
-return;
+    question.textContent = current.name;
+    questionNumber.textContent = `問題 ${count + 1} / 20`;
 
+    answer.value = "";
+    answer.focus();
 }
 
-current=elements[Math.floor(Math.random()*elements.length)];
+function check() {
 
-document.getElementById("question").textContent=current.name;
+    const ans = answer.value.trim();
 
-document.getElementById("questionNumber").textContent=
-`問題 ${count+1} / 20`;
+    if (ans === current.symbol) {
 
-document.getElementById("answer").value="";
+        score++;
+        message.textContent = "⭕ 正解！";
 
-document.getElementById("answer").focus();
+    } else if (ans.toLowerCase() === current.symbol.toLowerCase()) {
 
+        message.textContent =
+            `⚠ 大文字・小文字が違います！ 正しくは「${current.symbol}」です。`;
+
+    } else {
+
+        message.textContent =
+            `❌ 不正解！ 正解は「${current.symbol}」です。`;
+
+    }
+
+    count++;
+
+    scoreText.textContent = `得点：${score}`;
+
+    setTimeout(nextQuestion, 1200);
 }
 
-function check(){
+function finish() {
 
-const ans=document.getElementById("answer").value.trim();
+    const percent = Math.round(score / 20 * 100);
 
-if(ans.toLowerCase()==current.symbol.toLowerCase()){
-
-score++;
-
-document.getElementById("message").textContent="⭕ 正解！";
-
-}else{
-
-document.getElementById("message").textContent=
-`❌ 正解は ${current.symbol}`;
-
-}
-
-count++;
-
-document.getElementById("score").textContent=`得点：${score}`;
-
-setTimeout(nextQuestion,1000);
-
-}
-
-function finish(){
-
-document.querySelector(".container").innerHTML=
-
-`
-<h1>終了！</h1>
-
-<h2>${score} / 20 点</h2>
-
-<h3>正答率 ${Math.round(score/20*100)} %</h3>
-
-<button onclick="location.reload()">もう一度遊ぶ</button>
-`;
-
+    document.querySelector(".container").innerHTML = `
+        <h1>🎉 終了！</h1>
+        <h2>${score} / 20 点</h2>
+        <h3>正答率 ${percent}%</h3>
+        <button onclick="location.reload()">もう一度遊ぶ</button>
+    `;
 }

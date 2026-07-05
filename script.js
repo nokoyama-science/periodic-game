@@ -1,4 +1,5 @@
 // ===== 元素データ =====
+alert("Ver.3 を読み込みました");
 const elements = [
     { name: "水素", symbol: "H" },
     { name: "ヘリウム", symbol: "He" },

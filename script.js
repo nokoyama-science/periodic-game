@@ -1,3 +1,4 @@
+// ===== 元素データ =====
 const elements = [
     { name: "水素", symbol: "H" },
     { name: "ヘリウム", symbol: "He" },
@@ -21,19 +22,25 @@ const elements = [
     { name: "カルシウム", symbol: "Ca" }
 ];
 
+// 読み込まれたか確認
+console.log("script.js Ver.2 読み込み成功");
+
+// ===== 変数 =====
 let score = 0;
 let count = 0;
 let current;
 
+// ===== HTML取得 =====
 const question = document.getElementById("question");
 const questionNumber = document.getElementById("questionNumber");
 const answer = document.getElementById("answer");
 const message = document.getElementById("message");
 const scoreText = document.getElementById("score");
 
+// ===== 初期化 =====
 nextQuestion();
 
-document.getElementById("submitButton").onclick = check;
+document.getElementById("submitButton").addEventListener("click", check);
 
 answer.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
@@ -41,6 +48,7 @@ answer.addEventListener("keydown", function (e) {
     }
 });
 
+// ===== 次の問題 =====
 function nextQuestion() {
 
     if (count >= 20) {
@@ -54,27 +62,43 @@ function nextQuestion() {
     questionNumber.textContent = `問題 ${count + 1} / 20`;
 
     answer.value = "";
+    message.textContent = "";
+
     answer.focus();
 }
 
+// ===== 判定 =====
 function check() {
 
     const ans = answer.value.trim();
 
+    // 完全一致
     if (ans === current.symbol) {
 
         score++;
         message.textContent = "⭕ 正解！";
+        message.style.color = "green";
 
-    } else if (ans.toLowerCase() === current.symbol.toLowerCase()) {
+    }
+
+    // 大文字・小文字だけ違う
+    else if (
+        ans.length === current.symbol.length &&
+        ans.toUpperCase() === current.symbol.toUpperCase()
+    ) {
 
         message.textContent =
-            `⚠ 大文字・小文字が違います！ 正しくは「${current.symbol}」です。`;
+            `⚠ 大文字・小文字が違います。正しくは「${current.symbol}」です。`;
+        message.style.color = "orange";
 
-    } else {
+    }
+
+    // 完全に違う
+    else {
 
         message.textContent =
             `❌ 不正解！ 正解は「${current.symbol}」です。`;
+        message.style.color = "red";
 
     }
 
@@ -85,6 +109,7 @@ function check() {
     setTimeout(nextQuestion, 1200);
 }
 
+// ===== 終了 =====
 function finish() {
 
     const percent = Math.round(score / 20 * 100);
